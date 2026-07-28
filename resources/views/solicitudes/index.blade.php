@@ -1,18 +1,19 @@
-<!-- resources/views/solicitudes/index.blade.php -->
 @extends('layouts.app')
 
 @section('title', 'Listado de Solicitudes')
 
 @section('content')
-<h3>Listado de Solicitudes</h3>
+<h3>Mis Solicitudes</h3>
+
+<a href="{{ route('solicitudes.create') }}" class="btn btn-primary mb-3">Nueva Solicitud</a>
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th>ID</th>
-            <th>Usuario</th>
-            <th>Impresora</th>
-            <th>Tipo de Solicitud</th>
+            <th>Sucursal</th>
+            <th>Impresora(s)</th>
+            <th>Tipo</th>
             <th>Cantidad</th>
             <th>Estado</th>
             <th>Fecha</th>
@@ -20,25 +21,36 @@
         </tr>
     </thead>
     <tbody>
-        @foreach($solicitudes as $sol)
+        @forelse($solicitudes as $sol)
         <tr>
             <td>{{ $sol->id }}</td>
-            <td>{{ $sol->usuario->nombre }}</td>
-            <td>{{ $sol->impresora->modelo }} - {{ $sol->impresora->serie }}</td>
-            <td>{{ $sol->tipo_solicitud }}</td>
-            <td>{{ $sol->cantidad }}</td>
-            <td>{{ $sol->estado }}</td>
-            <td>{{ $sol->fecha_solicitud }}</td>
+            <td>{{ $sol->sucursal->nombre ?? '—' }}</td>
             <td>
-                @if($sol->estado == 'pendiente')
-                <form action="{{ url('solicitudes/'.$sol->id.'/aprobar') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="btn btn-success btn-sm">Aprobar</button>
-                </form>
-                @endif
+                @foreach($sol->detalles as $detalle)
+                    {{ $detalle->impresora->modelo }} - {{ $detalle->impresora->serie }}@if(!$loop->last), @endif
+                @endforeach
+            </td>
+            <td>
+                @foreach($sol->detalles as $detalle)
+                    {{ $detalle->tipo_movimiento }}@if(!$loop->last), @endif
+                @endforeach
+            </td>
+            <td>
+                @foreach($sol->detalles as $detalle)
+                    {{ $detalle->cantidad }}@if(!$loop->last), @endif
+                @endforeach
+            </td>
+            <td><span class="badge bg-secondary">{{ $sol->estado }}</span></td>
+            <td>{{ $sol->created_at->format('d/m/Y H:i') }}</td>
+            <td>
+                <a href="{{ route('solicitudes.show', $sol) }}" class="btn btn-sm btn-info">Ver</a>
             </td>
         </tr>
-        @endforeach
+        @empty
+        <tr>
+            <td colspan="8" class="text-center">No tienes solicitudes registradas.</td>
+        </tr>
+        @endforelse
     </tbody>
 </table>
 @endsection

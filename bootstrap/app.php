@@ -14,7 +14,7 @@ return Application::configure(basePath: dirname(__DIR__))
 
         //  Registro de middleware alias (ROL)
         $middleware->alias([
-            'rol' => \App\Http\Middleware\RolMiddleware::class,
+            'role' => \App\Http\Middleware\RoleMiddleware::class,
         ]);
 
     })

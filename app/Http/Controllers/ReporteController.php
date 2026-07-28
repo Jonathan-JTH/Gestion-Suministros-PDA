@@ -9,10 +9,12 @@ class ReporteController extends Controller
 {
     public function resumen()
     {
-        return [
+        $resumen = [
             'solicitudes_total' => Solicitud::count(),
-            'pendientes' => Solicitud::where('estado','pendiente')->count(),
-            'inventario' => Suministro::all()
+            'pendientes' => Solicitud::where('estado', 'pendiente')->count(),
+            'inventario' => Suministro::with('impresora')->get(),
         ];
+
+        return view('reportes.resumen', compact('resumen'));
     }
 }

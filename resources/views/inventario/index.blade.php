@@ -24,7 +24,7 @@
             <td>{{ $s->cantidad_actual }}</td>
             <td>{{ $s->minimo }}</td>
             <td>{{ $s->maximo }}</td>
-            <td>{{ $s->fecha_actualizacion }}</td>
+            <td>{{ $s->updated_at?->format('d/m/Y H:i') ?? '—' }}</td>
         </tr>
         @endforeach
     </tbody>

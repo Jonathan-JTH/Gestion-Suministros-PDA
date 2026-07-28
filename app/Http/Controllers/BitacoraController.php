@@ -8,6 +8,10 @@ class BitacoraController extends Controller
 {
     public function index()
     {
-        return BitacoraMovimiento::with('usuario')->get();
+        $bitacora = BitacoraMovimiento::with('usuario')
+            ->latest('created_at')
+            ->get();
+
+        return view('bitacora.index', compact('bitacora'));
     }
 }

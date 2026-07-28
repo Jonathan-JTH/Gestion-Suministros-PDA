@@ -6,20 +6,22 @@ use App\Models\Suministro;
 
 class InventarioController extends Controller
 {
-    // VER INVENTARIO
     public function index()
     {
-        return Suministro::with('impresora')->get();
+        $suministros = Suministro::with('impresora')->get();
+
+        return view('inventario.index', compact('suministros'));
     }
 
-    // ACTUALIZAR STOCK
     public function updateStock($id, $cantidad)
     {
-        $suministro = Suministro::find($id);
+        $suministro = Suministro::findOrFail($id);
 
         $suministro->cantidad_actual -= $cantidad;
         $suministro->save();
 
-        return response()->json($suministro);
+        return redirect()
+            ->route('inventario.index')
+            ->with('success', 'Stock actualizado correctamente.');
     }
 }

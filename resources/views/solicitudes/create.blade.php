@@ -19,8 +19,8 @@
     </div>
 
     <div class="mb-3">
-        <label for="tipo_solicitud" class="form-label">Tipo de Solicitud</label>
-        <select class="form-select" id="tipo_solicitud" name="tipo_solicitud">
+        <label for="tipo_movimiento" class="form-label">Tipo de Movimiento</label>
+        <select class="form-select" id="tipo_movimiento" name="tipo_movimiento">
             <option value="ENT">Entrega</option>
             <option value="DEV">Devolución</option>
             <option value="OC">Orden de Compra</option>

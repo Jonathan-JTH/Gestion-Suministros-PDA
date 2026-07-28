@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sucursal extends Model
 {
-    // Campos que se pueden llenar masivamente
+    protected $table = 'sucursales';
+
     protected $fillable = [
         'nombre',
         'direccion'

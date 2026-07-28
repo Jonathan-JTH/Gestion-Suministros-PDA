@@ -6,6 +6,8 @@ use Illuminate\Database\Eloquent\Model;
 
 class Solicitud extends Model
 {
+    protected $table = 'solicitudes';
+
     protected $fillable = [
         'usuario_id',
         'sucursal_id',
@@ -15,7 +17,7 @@ class Solicitud extends Model
 
     public function usuario()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'usuario_id');
     }
 
     public function sucursal()
