@@ -70,7 +70,23 @@ RECAPTCHA_SECRET_KEY=su_clave_secreta
 
 3. `php artisan config:clear`
 
-Con `RECAPTCHA_ENABLED=false` o sin claves, el login funciona **sin** widget (ideal en desarrollo).
+Con `RECAPTCHA_ENABLED=false` o sin claves, el login funciona **sin** widget.
+
+Claves creadas en **Google Cloud** (pantalla con “CreateAssessment”): `RECAPTCHA_ENTERPRISE=true`.
+
+**Tipo de integración** (`RECAPTCHA_INTEGRATION`):
+
+| Valor | Cuándo usarlo |
+|--------|----------------|
+| `enterprise_v3` | Clave **basada en puntuación (v3)** — sin casilla; verificación al pulsar Ingresar |
+| `enterprise_v2` | Casilla «No soy un robot» con claves Cloud (checkbox) |
+| `classic_v2` | Casilla clásica + claves del admin antiguo (`api.js`) |
+
+Dominios en Google: **`localhost`** y **`127.0.0.1`**.
+
+**Windows — “No se pudo contactar a Google reCAPTCHA”** con la casilla bien: PHP no tiene certificados CA (cURL 60). En `APP_ENV=local` el sistema omite verificación SSL hacia Google. En producción instale [cacert.pem](https://curl.se/ca/cacert.pem) en `php.ini` (`curl.cainfo` / `openssl.cafile`) o defina `RECAPTCHA_VERIFY_SSL=true` solo cuando eso esté configurado.
+
+**Aviso rojo en el checkbox** (*“This reCAPTCHA is for testing purposes only…”*): aparece con las **claves de prueba** de Google (las del `.env.example`). No es fallo del sistema. Para quitarlo, cree un sitio en reCAPTCHA Admin (v2 «No soy un robot»), agregue `localhost` y su dominio, y reemplace `RECAPTCHA_SITE_KEY` y `RECAPTCHA_SECRET_KEY` en `.env`.
 
 ## Flujo demo (defensa)
 

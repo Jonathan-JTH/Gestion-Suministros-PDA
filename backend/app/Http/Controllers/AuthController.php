@@ -21,6 +21,9 @@ class AuthController extends Controller
         return view('auth.login', [
             'recaptchaEnabled' => $this->recaptchaService->isRequired(),
             'recaptchaSiteKey' => $this->recaptchaService->siteKey(),
+            'recaptchaTestKeys' => $this->recaptchaService->isUsingTestKeys(),
+            'recaptchaEnterprise' => (bool) config('recaptcha.use_enterprise'),
+            'recaptchaIntegration' => config('recaptcha.integration', 'enterprise_v3'),
         ]);
     }
 
@@ -34,7 +37,7 @@ class AuthController extends Controller
         if (! $recaptcha['ok']) {
             return back()
                 ->withInput($request->only('correo'))
-                ->withErrors(['correo' => $recaptcha['message']]);
+                ->withErrors(['recaptcha' => $recaptcha['message']]);
         }
 
         $credentials = $request->validate([

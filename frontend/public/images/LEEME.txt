@@ -1,0 +1,7 @@
+Coloque aquí la foto corporativa como:
+
+  fabrigas-planta.png
+
+(Recomendado: vista aérea de planta Fabrigas, ~1600px de ancho, JPG o PNG.)
+
+El sistema la usa como fondo suave en login y en el panel (solo si el archivo existe).

@@ -79,12 +79,21 @@
                     @if($sol->estado === 'en_proceso')
                         @include('solicitudes._modal-atender', ['sol' => $sol])
                     @endif
-                    <div class="modal fade" id="rechazar{{ $sol->id }}" tabindex="-1">
-                        <div class="modal-dialog"><div class="modal-content">
+                    <div class="modal fade modal-pro" id="rechazar{{ $sol->id }}" tabindex="-1">
+                        <div class="modal-dialog"><div class="modal-content border-0 shadow">
                             <form action="{{ route('solicitudes.rechazar', $sol->id) }}" method="POST">@csrf
-                                <div class="modal-header"><h5 class="modal-title">Rechazar #{{ $sol->id }}</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
-                                <div class="modal-body"><textarea name="observacion" class="form-control" rows="3" placeholder="Motivo"></textarea></div>
-                                <div class="modal-footer"><button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button><button class="btn btn-danger">Rechazar</button></div>
+                                <div class="modal-header">
+                                    <h5 class="modal-title fw-semibold">Rechazar #{{ $sol->id }}</h5>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <label class="form-label" for="observacion_rechazar_{{ $sol->id }}">Motivo</label>
+                                    <textarea name="observacion" id="observacion_rechazar_{{ $sol->id }}" class="form-control form-control-sm" rows="3" placeholder="Indique el motivo del rechazo"></textarea>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" data-bs-dismiss="modal">Cancelar</button>
+                                    <button class="btn btn-danger btn-sm">Rechazar</button>
+                                </div>
                             </form>
                         </div></div>
                     </div>

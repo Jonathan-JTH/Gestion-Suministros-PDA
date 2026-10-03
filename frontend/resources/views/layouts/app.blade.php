@@ -7,21 +7,61 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
     <style>
-        body { background: #f4f6f9; min-height: 100vh; }
-        .app-shell { display: flex; min-height: 100vh; }
+        body { background: #eef2f7; min-height: 100vh; position: relative; }
+        .brand-background {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            pointer-events: none;
+            overflow: hidden;
+        }
+        .brand-background::before {
+            content: '';
+            position: absolute;
+            inset: -8px;
+            background-image: var(--brand-bg-image);
+            background-size: cover;
+            background-position: center 35%;
+            background-repeat: no-repeat;
+            opacity: 0.2;
+            filter: saturate(0.7) blur(2px);
+            transform: scale(1.03);
+        }
+        .brand-background::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(165deg, rgba(238,242,247,0.88) 0%, rgba(244,246,249,0.96) 45%, rgba(248,250,252,0.98) 100%);
+        }
+        .app-shell {
+            display: flex;
+            min-height: 100vh;
+            position: relative;
+            z-index: 1;
+        }
         .sidebar {
             width: 260px;
-            background: #1f2937;
+            background: rgba(31, 41, 55, 0.97);
             color: #e5e7eb;
             flex-shrink: 0;
+            backdrop-filter: blur(6px);
         }
         .sidebar .brand {
             padding: 1.25rem 1rem;
             font-weight: 700;
             border-bottom: 1px solid #374151;
+        }
+        .sidebar .brand-line {
             display: flex;
             align-items: center;
             gap: .5rem;
+        }
+        .sidebar .brand-sub {
+            font-size: 0.68rem;
+            font-weight: 500;
+            color: #9ca3af;
+            margin-top: 0.35rem;
+            letter-spacing: 0.02em;
         }
         .sidebar a {
             color: #d1d5db;
@@ -37,9 +77,10 @@
             color: #fff;
             border-left-color: #3b82f6;
         }
-        .content-wrap { flex: 1; display: flex; flex-direction: column; }
+        .content-wrap { flex: 1; display: flex; flex-direction: column; min-width: 0; }
         .topbar {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.92);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid #e5e7eb;
             padding: .85rem 1.5rem;
             display: flex;
@@ -50,7 +91,7 @@
         .kpi-card {
             border: 1px solid #e5e7eb;
             border-radius: .75rem;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.97);
             color: #111827;
         }
         .kpi-card .kpi-label {
@@ -64,7 +105,7 @@
         .kpi-card .kpi-accent { width: 4px; border-radius: 4px; align-self: stretch; min-height: 2.5rem; }
         .form-card {
             border: 1px solid #e5e7eb !important;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.98);
         }
         .form-card .form-label {
             color: #64748b;
@@ -82,8 +123,48 @@
             letter-spacing: 0.04em;
         }
         .detail-dl dd { margin-bottom: 0.75rem; }
-        .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1f2937, #111827); }
-        .auth-card { width: 100%; max-width: 420px; border-radius: 1rem; }
+        .auth-wrapper {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1.5rem;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(135deg, rgba(17,24,39,0.93), rgba(31,41,55,0.9));
+        }
+        body.has-brand-bg .auth-wrapper {
+            background:
+                linear-gradient(135deg, rgba(17,24,39,0.88), rgba(31,41,55,0.85)),
+                var(--brand-bg-image, none) center/cover no-repeat fixed;
+        }
+        .auth-card {
+            width: 100%;
+            max-width: 420px;
+            border-radius: 1rem;
+            background: rgba(255, 255, 255, 0.98);
+        }
+        .auth-card.auth-card-wide { max-width: 480px; }
+        .auth-brand-caption {
+            font-size: 0.75rem;
+            color: #6b7280;
+            letter-spacing: 0.03em;
+        }
+        .modal-pro .modal-header {
+            border-bottom: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+        .modal-pro .modal-footer {
+            border-top: 1px solid #e5e7eb;
+            background: #f8fafc;
+        }
+        .modal-pro .form-label {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
         @media (max-width: 991px) {
             .app-shell { flex-direction: column; }
             .sidebar { width: 100%; }
@@ -92,7 +173,7 @@
         .page-meta { color: #64748b; font-size: 0.875rem; }
         .filter-card {
             border: 1px solid #e5e7eb !important;
-            background: #fff;
+            background: rgba(255, 255, 255, 0.98);
         }
         .filter-card .form-label {
             color: #64748b;
@@ -115,21 +196,33 @@
             white-space: nowrap;
         }
         .table-pro tbody td { vertical-align: middle; }
-        .card-list-table { border: 1px solid #e5e7eb !important; }
+        .card-list-table {
+            border: 1px solid #e5e7eb !important;
+            background: rgba(255, 255, 255, 0.98);
+        }
         .card-list-table .card-footer {
-            background: #fff;
+            background: rgba(255, 255, 255, 0.98);
             border-top: 1px solid #e5e7eb;
         }
     </style>
     @stack('styles')
 </head>
-<body>
+@php
+    $hasBrandBg = is_file(public_path('images/fabrigas-planta.png'));
+    $brandBgInline = $hasBrandBg ? asset('images/fabrigas-planta.png') : null;
+@endphp
+<body class="@if($hasBrandBg) has-brand-bg @endif" @if($brandBgInline) style="--brand-bg-image: url('{{ $brandBgInline }}');" @endif>
+@include('partials.brand-background')
+
 @if(auth()->check() && session('2fa_verified'))
     <div class="app-shell">
         <aside class="sidebar">
             <div class="brand">
-                <i class="bi bi-printer-fill fs-4 text-primary"></i>
-                <span>Gestión de Suministros</span>
+                <div class="brand-line">
+                    <i class="bi bi-printer-fill fs-4 text-primary"></i>
+                    <span>Gestión de Suministros</span>
+                </div>
+                <div class="brand-sub">Grupo Fabrigas · Planta industrial</div>
             </div>
             <nav class="py-2">
                 @if(auth()->user()->isAdmin() || auth()->user()->isSoporte())

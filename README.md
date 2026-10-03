@@ -133,6 +133,8 @@ Admin y soporte configuran **2FA (Google Authenticator)** en el primer acceso.
 
 **reCAPTCHA v2** en login (opcional): variables `RECAPTCHA_*` en `backend/.env`; ver guía funcional. Desactivado por defecto en desarrollo.
 
+**Fondo corporativo:** la foto de planta va en `frontend/public/images/fabrigas-planta.png` (fondo suave en login y panel). Si falta el archivo, la UI usa solo color plano. Tras adjuntar una imagen en Cursor: `php scripts/copy-brand-image.php`.
+
 ---
 
 ## Comandos útiles
