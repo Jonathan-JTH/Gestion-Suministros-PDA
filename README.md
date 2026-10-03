@@ -12,7 +12,7 @@ Repositorio: **https://github.com/Jonathan-JTH/Gestion-Suministros-PDA.git**
 | **[frontend/](frontend/)** | Interfaz: vistas Blade, CSS/JS, `public/` (entrada web) |
 | **[docs/](docs/)** | Guías y documento de tesis |
 
-Detalle: [ESTRUCTURA-PROYECTO.md](ESTRUCTURA-PROYECTO.md) · Operación: [docs/GUIA-PROYECTO-FUNCIONAL.md](docs/GUIA-PROYECTO-FUNCIONAL.md)
+Detalle: [ESTRUCTURA-PROYECTO.md](ESTRUCTURA-PROYECTO.md) · Operación: [docs/GUIA-PROYECTO-FUNCIONAL.md](docs/GUIA-PROYECTO-FUNCIONAL.md) · Demo defensa: [docs/GUIA-DEMO-DEFENSA.md](docs/GUIA-DEMO-DEFENSA.md)
 
 ---
 
@@ -130,6 +130,8 @@ Para desarrollo con recarga en caliente: `npm run dev` (en otra terminal, desde 
 | Sucursal | sucursal@suministros.local | sucursal123 |
 
 Admin y soporte configuran **2FA (Google Authenticator)** en el primer acceso.
+
+**reCAPTCHA v2** en login (opcional): variables `RECAPTCHA_*` en `backend/.env`; ver guía funcional. Desactivado por defecto en desarrollo.
 
 ---
 

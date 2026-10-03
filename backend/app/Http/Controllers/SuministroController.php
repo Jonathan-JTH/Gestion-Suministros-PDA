@@ -13,13 +13,34 @@ class SuministroController extends Controller
 {
     public function __construct(private readonly InventarioService $inventarioService) {}
 
-    public function index()
+    public function index(Request $request)
     {
         $this->authorizePermiso('suministros.administrar');
 
-        $suministros = Suministro::with('inventarios.sucursal')->orderBy('nombre')->get();
+        $query = Suministro::with('inventarios.sucursal')->orderBy('nombre');
 
-        return view('suministros.index', compact('suministros'));
+        if ($request->filled('q')) {
+            $term = '%'.$request->string('q')->trim().'%';
+            $query->where(function ($w) use ($term) {
+                $w->where('nombre', 'like', $term)
+                    ->orWhere('tipo', 'like', $term)
+                    ->orWhere('marca', 'like', $term)
+                    ->orWhere('modelo', 'like', $term);
+            });
+        }
+
+        if ($request->filled('tipo')) {
+            $query->where('tipo', $request->tipo);
+        }
+
+        if ($request->filled('activo')) {
+            $query->where('activo', $request->boolean('activo'));
+        }
+
+        $suministros = $query->get();
+        $tipos = Suministro::query()->distinct()->orderBy('tipo')->pluck('tipo');
+
+        return view('suministros.index', compact('suministros', 'tipos'));
     }
 
     public function create()

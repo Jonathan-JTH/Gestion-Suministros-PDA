@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Services\RecaptchaService;
 use App\Services\TwoFactorService;
 use App\Support\RegistraBitacora;
 use Illuminate\Http\Request;
@@ -10,15 +11,32 @@ use RuntimeException;
 
 class AuthController extends Controller
 {
-    public function __construct(private readonly TwoFactorService $twoFactorService) {}
+    public function __construct(
+        private readonly TwoFactorService $twoFactorService,
+        private readonly RecaptchaService $recaptchaService,
+    ) {}
 
     public function showLogin()
     {
-        return view('auth.login');
+        return view('auth.login', [
+            'recaptchaEnabled' => $this->recaptchaService->isRequired(),
+            'recaptchaSiteKey' => $this->recaptchaService->siteKey(),
+        ]);
     }
 
     public function login(Request $request)
     {
+        $recaptcha = $this->recaptchaService->verify(
+            $request->input('g-recaptcha-response'),
+            $request->ip()
+        );
+
+        if (! $recaptcha['ok']) {
+            return back()
+                ->withInput($request->only('correo'))
+                ->withErrors(['correo' => $recaptcha['message']]);
+        }
+
         $credentials = $request->validate([
             'correo' => 'required|email',
             'password' => 'required',

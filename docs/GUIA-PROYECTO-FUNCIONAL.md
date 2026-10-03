@@ -55,7 +55,27 @@ php artisan sistema:verificar
 
 **Configuración → Notificaciones** (admin): activar/desactivar envíos y aviso al destinatario al despachar. Copia a TI obligatoria cuando correos están activos.
 
+## reCAPTCHA (login)
+
+Protección opcional en la pantalla de inicio de sesión (Google reCAPTCHA **v2 checkbox**).
+
+1. Crear sitio en [Google reCAPTCHA Admin](https://www.google.com/recaptcha/admin) (dominios: `localhost`, su URL de demo).
+2. En `backend/.env`:
+
+```env
+RECAPTCHA_ENABLED=true
+RECAPTCHA_SITE_KEY=su_clave_sitio
+RECAPTCHA_SECRET_KEY=su_clave_secreta
+```
+
+3. `php artisan config:clear`
+
+Con `RECAPTCHA_ENABLED=false` o sin claves, el login funciona **sin** widget (ideal en desarrollo).
+
 ## Flujo demo (defensa)
+
+Guion detallado: [GUIA-DEMO-DEFENSA.md](GUIA-DEMO-DEFENSA.md).
+
 
 1. **Sucursal** → Nueva solicitud → correo TI + confirmación al solicitante.
 2. **Soporte** → Solicitudes → En proceso → **Atender** → correo manual opcional (“su solicitud ha sido atendida”) → inventario actualizado.

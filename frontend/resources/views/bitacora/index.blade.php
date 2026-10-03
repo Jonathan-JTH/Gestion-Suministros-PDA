@@ -3,22 +3,22 @@
 @section('title', 'Bitácora')
 
 @section('content')
-<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
-    <h4 class="mb-0">Bitácora del sistema</h4>
-    <span class="text-muted small">{{ $bitacora->total() }} registro(s)</span>
+<div class="mb-3">
+    <h4 class="page-title mb-0">Bitácora del sistema</h4>
+    <p class="page-meta mb-0">{{ $bitacora->total() }} registro(s)</p>
 </div>
 
-<div class="card shadow-sm border-0 mb-3">
-    <div class="card-body">
+<div class="card filter-card shadow-sm mb-3">
+    <div class="card-body py-3">
         <form method="GET" action="{{ route('bitacora.index') }}" class="row g-2 align-items-end">
             <div class="col-md-4">
-                <label for="q" class="form-label small mb-1">Buscar</label>
+                <label for="q" class="form-label">Buscar</label>
                 <input type="search" name="q" id="q" class="form-control form-control-sm"
                        placeholder="Detalle, módulo, acción, IP…"
                        value="{{ request('q') }}">
             </div>
             <div class="col-md-2">
-                <label for="modulo" class="form-label small mb-1">Módulo</label>
+                <label for="modulo" class="form-label">Módulo</label>
                 <select name="modulo" id="modulo" class="form-select form-select-sm">
                     <option value="">Todos</option>
                     @foreach($modulos as $m)
@@ -27,7 +27,7 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <label for="accion" class="form-label small mb-1">Acción</label>
+                <label for="accion" class="form-label">Acción</label>
                 <select name="accion" id="accion" class="form-select form-select-sm">
                     <option value="">Todas</option>
                     @foreach($acciones as $a)
@@ -36,11 +36,11 @@
                 </select>
             </div>
             <div class="col-md-2">
-                <label for="desde" class="form-label small mb-1">Desde</label>
+                <label for="desde" class="form-label">Desde</label>
                 <input type="date" name="desde" id="desde" class="form-control form-control-sm" value="{{ request('desde') }}">
             </div>
             <div class="col-md-2">
-                <label for="hasta" class="form-label small mb-1">Hasta</label>
+                <label for="hasta" class="form-label">Hasta</label>
                 <input type="date" name="hasta" id="hasta" class="form-control form-control-sm" value="{{ request('hasta') }}">
             </div>
             <div class="col-12 col-md-auto d-flex gap-2">
@@ -51,9 +51,9 @@
     </div>
 </div>
 
-<div class="card shadow-sm border-0">
+<div class="card card-list-table shadow-sm border-0">
     <div class="table-responsive">
-        <table class="table table-striped table-hover table-bordered align-middle mb-0 bitacora-table">
+        <table class="table table-pro table-striped table-hover table-bordered align-middle mb-0">
             <thead class="table-dark">
                 <tr>
                     <th style="width: 11rem;">Fecha</th>
@@ -99,9 +99,4 @@
         </div>
     @endif
 </div>
-
-<style>
-    .bitacora-table thead th { font-size: 0.85rem; }
-    .bitacora-table tbody td { vertical-align: middle; }
-</style>
 @endsection

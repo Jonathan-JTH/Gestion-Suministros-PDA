@@ -24,8 +24,19 @@ class InventarioController extends Controller
             $query->where('sucursal_id', $request->input('sucursal_id'));
         }
 
+        if ($request->filled('q')) {
+            $term = '%'.$request->string('q')->trim().'%';
+            $query->whereHas('suministro', fn ($q) => $q->where('nombre', 'like', $term));
+        }
+
+        $items = $query->get();
+
+        if ($request->boolean('solo_bajo')) {
+            $items = $items->filter(fn (Inventario $i) => $i->bajoStockMinimo())->values();
+        }
+
         return view('inventario.index', [
-            'inventario' => $query->get(),
+            'inventario' => $items,
             'sucursales' => Sucursal::orderBy('nombre')->get(),
         ]);
     }

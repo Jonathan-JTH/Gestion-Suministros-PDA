@@ -3,65 +3,113 @@
 @section('title', 'Solicitud #' . $solicitud->id)
 
 @section('content')
-<div class="card shadow-sm border-0 mb-3">
-    <div class="card-body">
-        <h4>Solicitud #{{ $solicitud->id }}</h4>
-        <div class="row mt-3">
-            <div class="col-md-6"><strong>Solicitante:</strong> {{ $solicitud->nombreSolicitanteMostrar() }}</div>
-            <div class="col-md-6"><strong>Sucursal:</strong> {{ $solicitud->sucursal->nombre }}</div>
-            <div class="col-md-6 mt-2"><strong>Correo:</strong> {{ $solicitud->correoSolicitanteMostrar() ?? '—' }}</div>
-            <div class="col-md-6 mt-2"><strong>Tipo:</strong> {{ $solicitud->tipo_movimiento ?? '—' }}</div>
+<div class="d-flex flex-wrap justify-content-between align-items-start gap-2 mb-3">
+    <div>
+        <h4 class="page-title mb-1">Solicitud #{{ $solicitud->id }}</h4>
+        <p class="page-meta mb-0">{{ $solicitud->created_at->format('d/m/Y H:i') }}</p>
+    </div>
+    @include('partials.badge-solicitud-estado', ['estado' => $solicitud->estado])
+</div>
+
+<div class="card form-card shadow-sm border-0 mb-3">
+    <div class="card-body p-4">
+        <dl class="row detail-dl mb-0">
+            <div class="col-md-6">
+                <dt>Solicitante</dt>
+                <dd>{{ $solicitud->nombreSolicitanteMostrar() }}</dd>
+            </div>
+            <div class="col-md-6">
+                <dt>Sucursal</dt>
+                <dd>{{ $solicitud->sucursal->nombre }}</dd>
+            </div>
+            <div class="col-md-6">
+                <dt>Correo</dt>
+                <dd>{{ $solicitud->correoSolicitanteMostrar() ?? '—' }}</dd>
+            </div>
+            <div class="col-md-6">
+                <dt>Tipo de movimiento</dt>
+                <dd>{{ $solicitud->tipo_movimiento ?? '—' }}</dd>
+            </div>
             @if($solicitud->ubicacion)
-                <div class="col-md-6 mt-2"><strong>Ubicación:</strong> {{ $solicitud->ubicacion }}</div>
-            @endif
-            @if($solicitud->puesto_area)
-                <div class="col-md-6 mt-2"><strong>Puesto/área:</strong> {{ $solicitud->puesto_area }}</div>
-            @endif
-            @if($solicitud->modelo_equipo)
-                <div class="col-md-6 mt-2"><strong>Modelo equipo:</strong> {{ $solicitud->modelo_equipo }}</div>
-            @endif
-            <div class="col-md-6 mt-2"><strong>Estado:</strong> {{ str_replace('_', ' ', $solicitud->estado) }}</div>
-            <div class="col-md-6 mt-2"><strong>Fecha:</strong> {{ $solicitud->created_at->format('d/m/Y H:i') }}</div>
-            @if($solicitud->observacion)
-                <div class="col-12 mt-2"><strong>Observaciones:</strong> {{ $solicitud->observacion }}</div>
-            @endif
-            @if($solicitud->estado === 'atendida' && $solicitud->despachado_at)
-                <div class="col-12 mt-3 pt-3 border-top">
-                    <h6 class="text-muted mb-2">Auditoría de despacho (TI)</h6>
-                    <div class="row">
-                        <div class="col-md-6"><strong>Despachado por:</strong> {{ $solicitud->despachadoPor->nombre ?? '—' }}</div>
-                        <div class="col-md-6"><strong>Fecha despacho:</strong> {{ $solicitud->despachado_at->format('d/m/Y H:i') }}</div>
-                        <div class="col-md-6 mt-2"><strong>Correo notificado:</strong> {{ $solicitud->correo_destinatario_despacho ?? '—' }}</div>
-                        @if($solicitud->nota_despacho)
-                            <div class="col-12 mt-2"><strong>Nota enviada en correo:</strong> {{ $solicitud->nota_despacho }}</div>
-                        @endif
-                    </div>
+                <div class="col-md-6">
+                    <dt>Ubicación</dt>
+                    <dd>{{ $solicitud->ubicacion }}</dd>
                 </div>
             @endif
-        </div>
+            @if($solicitud->puesto_area)
+                <div class="col-md-6">
+                    <dt>Puesto / área</dt>
+                    <dd>{{ $solicitud->puesto_area }}</dd>
+                </div>
+            @endif
+            @if($solicitud->modelo_equipo)
+                <div class="col-md-6">
+                    <dt>Modelo equipo</dt>
+                    <dd>{{ $solicitud->modelo_equipo }}</dd>
+                </div>
+            @endif
+            @if($solicitud->observacion)
+                <div class="col-12">
+                    <dt>Observaciones</dt>
+                    <dd>{{ $solicitud->observacion }}</dd>
+                </div>
+            @endif
+        </dl>
+
+        @if($solicitud->estado === 'atendida' && $solicitud->despachado_at)
+            <hr class="my-3">
+            <h6 class="text-muted text-uppercase small fw-semibold mb-3">Auditoría de despacho (TI)</h6>
+            <dl class="row detail-dl mb-0">
+                <div class="col-md-6">
+                    <dt>Despachado por</dt>
+                    <dd>{{ $solicitud->despachadoPor->nombre ?? '—' }}</dd>
+                </div>
+                <div class="col-md-6">
+                    <dt>Fecha despacho</dt>
+                    <dd>{{ $solicitud->despachado_at->format('d/m/Y H:i') }}</dd>
+                </div>
+                <div class="col-md-6">
+                    <dt>Correo notificado</dt>
+                    <dd>{{ $solicitud->correo_destinatario_despacho ?? '—' }}</dd>
+                </div>
+                @if($solicitud->nota_despacho)
+                    <div class="col-12">
+                        <dt>Nota en correo</dt>
+                        <dd>{{ $solicitud->nota_despacho }}</dd>
+                    </div>
+                @endif
+            </dl>
+        @endif
     </div>
 </div>
 
-<table class="table table-bordered bg-white">
-    <thead class="table-light"><tr><th>Suministro</th><th>Cantidad</th></tr></thead>
-    <tbody>
-        @foreach($solicitud->detalles as $detalle)
-            <tr>
-                <td>{{ $detalle->suministro->nombre ?? '—' }}</td>
-                <td>{{ $detalle->cantidad }}</td>
-            </tr>
-        @endforeach
-    </tbody>
-</table>
+<div class="card card-list-table shadow-sm border-0 mb-3">
+    <div class="table-responsive">
+        <table class="table table-pro table-bordered align-middle mb-0">
+            <thead class="table-dark">
+                <tr><th>Suministro</th><th style="width: 8rem;">Cantidad</th></tr>
+            </thead>
+            <tbody>
+                @foreach($solicitud->detalles as $detalle)
+                    <tr>
+                        <td class="fw-medium">{{ $detalle->suministro->nombre ?? '—' }}</td>
+                        <td>{{ $detalle->cantidad }}</td>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
+    </div>
+</div>
 
-@if($esAdmin && $solicitud->estado === 'en_proceso')
-    @include('solicitudes._modal-atender', ['sol' => $solicitud])
-    <button type="button" class="btn btn-primary me-2" data-bs-toggle="modal" data-bs-target="#atender{{ $solicitud->id }}">Atender solicitud</button>
-@endif
-
-@if($esAdmin)
-    <a href="{{ route('solicitudes.gestion') }}" class="btn btn-secondary">Volver</a>
-@else
-    <a href="{{ route('solicitudes.index') }}" class="btn btn-secondary">Volver</a>
-@endif
+<div class="d-flex flex-wrap gap-2">
+    @if($esAdmin && $solicitud->estado === 'en_proceso')
+        @include('solicitudes._modal-atender', ['sol' => $solicitud])
+        <button type="button" class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#atender{{ $solicitud->id }}">Atender solicitud</button>
+    @endif
+    @if($esAdmin)
+        <a href="{{ route('solicitudes.gestion') }}" class="btn btn-outline-secondary btn-sm">Volver a gestión</a>
+    @else
+        <a href="{{ route('solicitudes.index') }}" class="btn btn-outline-secondary btn-sm">Volver</a>
+    @endif
+</div>
 @endsection

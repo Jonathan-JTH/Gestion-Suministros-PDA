@@ -3,29 +3,50 @@
 @section('title', 'Panel administrativo')
 
 @section('content')
-<div class="row g-3 mb-4">
-    <div class="col-md-3"><div class="card kpi-card bg-warning"><div class="card-body"><div class="small opacity-75">Pendientes</div><div class="display-6 fw-bold">{{ $pendientes }}</div></div></div></div>
-    <div class="col-md-3"><div class="card kpi-card bg-info"><div class="card-body"><div class="small opacity-75">En proceso</div><div class="display-6 fw-bold">{{ $enProceso }}</div></div></div></div>
-    <div class="col-md-3"><div class="card kpi-card bg-success"><div class="card-body"><div class="small opacity-75">Atendidas</div><div class="display-6 fw-bold">{{ $atendidas }}</div></div></div></div>
-    <div class="col-md-3"><div class="card kpi-card bg-danger"><div class="card-body"><div class="small opacity-75">Rechazadas</div><div class="display-6 fw-bold">{{ $rechazadas }}</div></div></div></div>
+<div class="mb-3">
+    <h4 class="page-title mb-0">Panel administrativo</h4>
+    <p class="page-meta mb-0">Resumen operativo</p>
 </div>
 
 <div class="row g-3 mb-4">
-    <div class="col-md-3"><div class="card kpi-card bg-primary"><div class="card-body"><div class="small opacity-75">Suministros activos</div><div class="display-6 fw-bold">{{ $totalSuministros }}</div></div></div></div>
-    <div class="col-md-3"><div class="card kpi-card bg-dark"><div class="card-body"><div class="small opacity-75">Usuarios activos</div><div class="display-6 fw-bold">{{ $totalUsuarios }}</div></div></div></div>
-    <div class="col-md-3"><div class="card kpi-card bg-secondary"><div class="card-body"><div class="small opacity-75">Alertas stock bajo</div><div class="display-6 fw-bold">{{ $inventarioBajo }}</div></div></div></div>
+    @php
+        $estadoKpis = [
+            ['label' => 'Pendientes', 'value' => $pendientes, 'color' => '#64748b'],
+            ['label' => 'En proceso', 'value' => $enProceso, 'color' => '#2563eb'],
+            ['label' => 'Atendidas', 'value' => $atendidas, 'color' => '#059669'],
+            ['label' => 'Rechazadas', 'value' => $rechazadas, 'color' => '#334155'],
+        ];
+        $otrosKpis = [
+            ['label' => 'Suministros activos', 'value' => $totalSuministros, 'color' => '#1f2937'],
+            ['label' => 'Usuarios activos', 'value' => $totalUsuarios, 'color' => '#475569'],
+            ['label' => 'Alertas stock bajo', 'value' => $inventarioBajo, 'color' => '#b45309'],
+        ];
+    @endphp
+    @foreach(array_merge($estadoKpis, $otrosKpis) as $kpi)
+        <div class="col-md-3 col-sm-6">
+            <div class="card kpi-card shadow-sm h-100">
+                <div class="card-body d-flex gap-3 align-items-center py-3">
+                    <div class="kpi-accent" style="background: {{ $kpi['color'] }};"></div>
+                    <div>
+                        <div class="kpi-label">{{ $kpi['label'] }}</div>
+                        <div class="kpi-value">{{ $kpi['value'] }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
 </div>
 
 <div class="row g-4">
     <div class="col-lg-5">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white fw-semibold">Solicitudes por estado</div>
+        <div class="card shadow-sm border-0 h-100 form-card">
+            <div class="card-header bg-white border-bottom py-3 fw-semibold small text-uppercase text-muted">Solicitudes por estado</div>
             <div class="card-body"><canvas id="chartEstados" height="220"></canvas></div>
         </div>
     </div>
     <div class="col-lg-7">
-        <div class="card shadow-sm border-0 h-100">
-            <div class="card-header bg-white fw-semibold">Movimientos de inventario (6 meses)</div>
+        <div class="card shadow-sm border-0 h-100 form-card">
+            <div class="card-header bg-white border-bottom py-3 fw-semibold small text-uppercase text-muted">Movimientos de inventario (6 meses)</div>
             <div class="card-body"><canvas id="chartMovimientos" height="220"></canvas></div>
         </div>
     </div>
@@ -34,11 +55,12 @@
 
 @push('scripts')
 <script>
+const chartPalette = ['#64748b', '#2563eb', '#059669', '#334155'];
 new Chart(document.getElementById('chartEstados'), {
     type: 'doughnut',
     data: {
         labels: @json($estadosLabels),
-        datasets: [{ data: @json($estadosValues), backgroundColor: ['#f59e0b','#3b82f6','#10b981','#ef4444'] }]
+        datasets: [{ data: @json($estadosValues), backgroundColor: chartPalette, borderWidth: 0 }]
     },
     options: { plugins: { legend: { position: 'bottom' } } }
 });
@@ -47,8 +69,8 @@ new Chart(document.getElementById('chartMovimientos'), {
     data: {
         labels: @json($chartMeses),
         datasets: [
-            { label: 'Entradas', data: @json($chartEntradas), backgroundColor: '#10b981' },
-            { label: 'Salidas', data: @json($chartSalidas), backgroundColor: '#ef4444' }
+            { label: 'Entradas', data: @json($chartEntradas), backgroundColor: '#059669' },
+            { label: 'Salidas', data: @json($chartSalidas), backgroundColor: '#475569' }
         ]
     },
     options: { responsive: true, scales: { y: { beginAtZero: true } } }

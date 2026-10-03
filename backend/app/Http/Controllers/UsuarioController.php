@@ -13,12 +13,30 @@ use Illuminate\Validation\Rule;
 
 class UsuarioController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
         $this->authorizePermiso('usuarios.administrar');
 
+        $query = User::with(['rol', 'sucursal'])->orderBy('nombre');
+
+        if ($request->filled('q')) {
+            $term = '%'.$request->string('q')->trim().'%';
+            $query->where(function ($w) use ($term) {
+                $w->where('nombre', 'like', $term)->orWhere('correo', 'like', $term);
+            });
+        }
+
+        if ($request->filled('rol_id')) {
+            $query->where('rol_id', $request->rol_id);
+        }
+
+        if ($request->filled('activo')) {
+            $query->where('activo', $request->boolean('activo'));
+        }
+
         return view('usuarios.index', [
-            'usuarios' => User::with(['rol', 'sucursal'])->orderBy('nombre')->get(),
+            'usuarios' => $query->get(),
+            'roles' => Rol::orderBy('nombre')->get(),
         ]);
     }
 

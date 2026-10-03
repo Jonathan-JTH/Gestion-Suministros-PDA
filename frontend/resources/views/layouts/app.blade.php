@@ -47,12 +47,78 @@
             align-items: center;
         }
         .main-content { padding: 1.5rem; }
-        .kpi-card { border: 0; border-radius: .75rem; color: #fff; }
+        .kpi-card {
+            border: 1px solid #e5e7eb;
+            border-radius: .75rem;
+            background: #fff;
+            color: #111827;
+        }
+        .kpi-card .kpi-label {
+            color: #64748b;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .kpi-card .kpi-value { font-size: 1.75rem; font-weight: 700; line-height: 1.2; }
+        .kpi-card .kpi-accent { width: 4px; border-radius: 4px; align-self: stretch; min-height: 2.5rem; }
+        .form-card {
+            border: 1px solid #e5e7eb !important;
+            background: #fff;
+        }
+        .form-card .form-label {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.35rem;
+        }
+        .detail-dl dt {
+            color: #64748b;
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .detail-dl dd { margin-bottom: 0.75rem; }
         .auth-wrapper { min-height: 100vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #1f2937, #111827); }
         .auth-card { width: 100%; max-width: 420px; border-radius: 1rem; }
         @media (max-width: 991px) {
             .app-shell { flex-direction: column; }
             .sidebar { width: 100%; }
+        }
+        .page-title { font-weight: 600; color: #111827; }
+        .page-meta { color: #64748b; font-size: 0.875rem; }
+        .filter-card {
+            border: 1px solid #e5e7eb !important;
+            background: #fff;
+        }
+        .filter-card .form-label {
+            color: #64748b;
+            font-weight: 600;
+            font-size: 0.72rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            margin-bottom: 0.25rem;
+        }
+        .table-pro {
+            font-size: 0.9rem;
+            margin-bottom: 0;
+        }
+        .table-pro thead th {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-color: #374151 !important;
+            white-space: nowrap;
+        }
+        .table-pro tbody td { vertical-align: middle; }
+        .card-list-table { border: 1px solid #e5e7eb !important; }
+        .card-list-table .card-footer {
+            background: #fff;
+            border-top: 1px solid #e5e7eb;
         }
     </style>
     @stack('styles')

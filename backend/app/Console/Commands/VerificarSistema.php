@@ -45,6 +45,11 @@ class VerificarSistema extends Command
         $this->line('Mailer activo: ' . $mailer);
         $this->line('From: ' . (config('mail.from.address') ?: '—'));
 
+        $recaptchaOn = config('recaptcha.enabled')
+            && filled(config('recaptcha.site_key'))
+            && filled(config('recaptcha.secret_key'));
+        $this->line('reCAPTCHA login: ' . ($recaptchaOn ? 'activo' : 'desactivado (desarrollo)'));
+
         if ($mailer === 'log') {
             $this->warn('Los correos NO llegan al buzón real: se guardan en backend/storage/logs/laravel.log (busque "To:").');
             $this->warn('Para Gmail: complete MAIL_USERNAME, MAIL_PASSWORD y MAIL_FROM_ADDRESS en backend/.env y ejecute php artisan config:clear');

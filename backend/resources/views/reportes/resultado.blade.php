@@ -13,50 +13,61 @@
     ];
     $col = $columna ?? 'Detalle';
 @endphp
-<div class="d-flex justify-content-between align-items-center mb-3">
-    <h4>Reporte: {{ $titulos[$tipo] ?? $tipo }} ({{ $desde }} — {{ $hasta }})</h4>
-    <a href="{{ route('reportes.pdf', request()->query()) }}" class="btn btn-outline-danger">Exportar PDF</a>
+
+<div class="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-3">
+    <div>
+        <h4 class="page-title mb-0">{{ $titulos[$tipo] ?? $tipo }}</h4>
+        <p class="page-meta mb-0">{{ $desde }} — {{ $hasta }}</p>
+    </div>
+    <a href="{{ route('reportes.pdf', request()->query()) }}" class="btn btn-outline-dark btn-sm"><i class="bi bi-file-pdf"></i> Exportar PDF</a>
 </div>
 
 <div class="row g-4">
     <div class="col-lg-7">
-        <div class="card shadow-sm border-0"><div class="card-body"><canvas id="reporteChart" height="140"></canvas></div></div>
+        <div class="card form-card shadow-sm border-0">
+            <div class="card-body"><canvas id="reporteChart" height="140"></canvas></div>
+        </div>
     </div>
     <div class="col-lg-5">
-        <div class="card shadow-sm border-0">
-            <table class="table mb-0">
-                <thead class="table-light"><tr><th>{{ $col }}</th><th>Total</th></tr></thead>
-                <tbody>
-                    @forelse($filas as $f)
-                        <tr>
-                            <td>
-                                @if($tipo === 'solicitudes')
-                                    {{ str_replace('_', ' ', $f->estado) }}
-                                @elseif($tipo === 'movimientos')
-                                    {{ $f->tipo }}
-                                @else
-                                    {{ $f->nombre }}
-                                @endif
-                            </td>
-                            <td>{{ $f->total }}</td>
-                        </tr>
-                    @empty
-                        <tr><td colspan="2" class="text-center text-muted">Sin datos en el periodo.</td></tr>
-                    @endforelse
-                </tbody>
-            </table>
+        <div class="card card-list-table shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table table-pro table-bordered align-middle mb-0">
+                    <thead class="table-dark">
+                        <tr><th>{{ $col }}</th><th class="text-end">Total</th></tr>
+                    </thead>
+                    <tbody>
+                        @forelse($filas as $f)
+                            <tr>
+                                <td>
+                                    @if($tipo === 'solicitudes')
+                                        @include('partials.badge-solicitud-estado', ['estado' => $f->estado])
+                                    @elseif($tipo === 'movimientos')
+                                        <span class="badge text-bg-secondary">{{ $f->tipo }}</span>
+                                    @else
+                                        {{ $f->nombre }}
+                                    @endif
+                                </td>
+                                <td class="text-end fw-medium">{{ $f->total }}</td>
+                            </tr>
+                        @empty
+                            <tr><td colspan="2" class="text-center text-muted py-4">Sin datos en el periodo.</td></tr>
+                        @endforelse
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 </div>
-<a href="{{ route('reportes.index') }}" class="btn btn-secondary mt-3">Nuevo reporte</a>
+
+<a href="{{ route('reportes.index') }}" class="btn btn-outline-secondary btn-sm mt-3">Nuevo reporte</a>
 @endsection
 
 @push('scripts')
 <script>
 new Chart(document.getElementById('reporteChart'), {
     type: 'bar',
-    data: { labels: @json($labels), datasets: [{ label: 'Total', data: @json($values), backgroundColor: '#3b82f6' }] },
-    options: { scales: { y: { beginAtZero: true } } }
+    data: { labels: @json($labels), datasets: [{ label: 'Total', data: @json($values), backgroundColor: '#2563eb' }] },
+    options: { scales: { y: { beginAtZero: true } }, plugins: { legend: { display: false } } }
 });
 </script>
 @endpush
