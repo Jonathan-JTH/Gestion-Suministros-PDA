@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Support\ReporteMembretePdf;
 use App\Models\DetalleSolicitud;
 use App\Models\Inventario;
 use App\Models\MovimientoInventario;
@@ -43,6 +44,12 @@ class ReporteController extends Controller
 
     public function pdf(Request $request)
     {
+        if (! extension_loaded('gd')) {
+            return redirect()
+                ->back()
+                ->with('error', 'El PDF con membrete oficial requiere la extensión GD en PHP. Active extension=gd en php.ini, ejecute scripts/check-php-gd.php y reinicie php artisan serve.');
+        }
+
         $data = $this->validatedReport($request);
 
         $payload = $this->buildReport($data['tipo'], $data['desde'], $data['hasta']);
@@ -51,10 +58,13 @@ class ReporteController extends Controller
             'graficoSvg' => \App\Support\ReporteGraficoSvg::renderForPdf(
                 $data['grafico'],
                 $payload['labels'],
-                $payload['values']
+                $payload['values'],
+                530,
+                200
             ),
             'tituloReporte' => self::tituloReporte($data['tipo']),
             'nombreGrafico' => self::nombreGrafico($data['grafico']),
+            'membrete' => ReporteMembretePdf::render(),
         ]))
             ->setPaper('a4')
             ->setOption('isRemoteEnabled', true);

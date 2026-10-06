@@ -1,7 +1,10 @@
-Coloque aquí la foto corporativa como:
+Archivos en esta carpeta:
 
   fabrigas-planta.png
+    Fondo suave en login y panel (~1600px ancho).
 
-(Recomendado: vista aérea de planta Fabrigas, ~1600px de ancho, JPG o PNG.)
+  membrete-fabrigas-pda.png
+    Encabezado corporativo del PDF (Word ENCABEZADO.png: 100 años, Productos del Aire, ISO).
 
-El sistema la usa como fondo suave en login y en el panel (solo si el archivo existe).
+  pie-fabrigas-pda.png
+    Pie corporativo del PDF (dirección, teléfono, listado de productos).

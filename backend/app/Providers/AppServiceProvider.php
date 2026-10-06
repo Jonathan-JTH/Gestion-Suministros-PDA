@@ -17,8 +17,16 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
-        // Monorepo: Laravel public = frontend/public; DomPDF defaults to base_path('public') which no existe.
-        config(['dompdf.public_path' => public_path()]);
+        // Monorepo: assets en frontend/public; chroot debe incluir esa carpeta para imágenes en PDF.
+        $chroot = array_values(array_filter([
+            realpath(base_path()),
+            realpath(public_path()),
+            realpath(base_path('..')),
+        ]));
+        config([
+            'dompdf.public_path' => public_path(),
+            'dompdf.options.chroot' => $chroot,
+        ]);
 
         Paginator::useBootstrapFive();
 
