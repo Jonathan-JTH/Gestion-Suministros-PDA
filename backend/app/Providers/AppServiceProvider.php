@@ -17,6 +17,9 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        // Monorepo: Laravel public = frontend/public; DomPDF defaults to base_path('public') which no existe.
+        config(['dompdf.public_path' => public_path()]);
+
         Paginator::useBootstrapFive();
 
         Gate::policy(Solicitud::class, SolicitudPolicy::class);

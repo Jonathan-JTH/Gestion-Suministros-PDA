@@ -15,6 +15,8 @@ class ReporteController extends Controller
 {
     private const TIPOS = ['consumo', 'solicitudes', 'sucursal', 'movimientos', 'inventario_bajo'];
 
+    private const GRAFICOS = ['bar', 'horizontal', 'line', 'pie', 'doughnut'];
+
     public function index()
     {
         if (! auth()->user()->tienePermiso('reportes.generar')) {
@@ -34,6 +36,8 @@ class ReporteController extends Controller
             'tipo' => $data['tipo'],
             'desde' => $data['desde'],
             'hasta' => $data['hasta'],
+            'grafico' => $data['grafico'],
+            'nombreGrafico' => self::nombreGrafico($data['grafico']),
         ]));
     }
 
@@ -43,18 +47,56 @@ class ReporteController extends Controller
 
         $payload = $this->buildReport($data['tipo'], $data['desde'], $data['hasta']);
 
-        $pdf = Pdf::loadView('reportes.pdf', array_merge($payload, $data))->setPaper('a4');
+        $pdf = Pdf::loadView('reportes.pdf', array_merge($payload, $data, [
+            'graficoSvg' => \App\Support\ReporteGraficoSvg::renderForPdf(
+                $data['grafico'],
+                $payload['labels'],
+                $payload['values']
+            ),
+            'tituloReporte' => self::tituloReporte($data['tipo']),
+            'nombreGrafico' => self::nombreGrafico($data['grafico']),
+        ]))
+            ->setPaper('a4')
+            ->setOption('isRemoteEnabled', true);
 
         return $pdf->download('reporte-' . $data['tipo'] . '.pdf');
     }
 
     private function validatedReport(Request $request): array
     {
-        return $request->validate([
+        $data = $request->validate([
             'tipo' => ['required', Rule::in(self::TIPOS)],
             'desde' => 'required|date',
             'hasta' => 'required|date|after_or_equal:desde',
+            'grafico' => ['nullable', Rule::in(self::GRAFICOS)],
         ]);
+
+        $data['grafico'] = $data['grafico'] ?? 'bar';
+
+        return $data;
+    }
+
+    public static function tituloReporte(string $tipo): string
+    {
+        return match ($tipo) {
+            'consumo' => 'Consumo por suministro',
+            'solicitudes' => 'Solicitudes por estado',
+            'sucursal' => 'Solicitudes por sucursal',
+            'movimientos' => 'Movimientos de inventario',
+            'inventario_bajo' => 'Inventario bajo stock mínimo',
+            default => $tipo,
+        };
+    }
+
+    public static function nombreGrafico(string $grafico): string
+    {
+        return match ($grafico) {
+            'horizontal' => 'Barras horizontales',
+            'line' => 'Líneas',
+            'pie' => 'Pastel',
+            'doughnut' => 'Anillo',
+            default => 'Barras verticales',
+        };
     }
 
     private function buildReport(string $tipo, string $desde, string $hasta): array
