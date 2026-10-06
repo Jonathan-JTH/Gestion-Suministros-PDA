@@ -53,18 +53,19 @@ class ReporteController extends Controller
         $data = $this->validatedReport($request);
 
         $payload = $this->buildReport($data['tipo'], $data['desde'], $data['hasta']);
+        $membrete = ReporteMembretePdf::render();
 
         $pdf = Pdf::loadView('reportes.pdf', array_merge($payload, $data, [
             'graficoSvg' => \App\Support\ReporteGraficoSvg::renderForPdf(
                 $data['grafico'],
                 $payload['labels'],
                 $payload['values'],
-                530,
-                200
+                $membrete['chartWidth'],
+                $membrete['chartHeight']
             ),
             'tituloReporte' => self::tituloReporte($data['tipo']),
             'nombreGrafico' => self::nombreGrafico($data['grafico']),
-            'membrete' => ReporteMembretePdf::render(),
+            'membrete' => $membrete,
         ]))
             ->setPaper('a4')
             ->setOption('isRemoteEnabled', true);

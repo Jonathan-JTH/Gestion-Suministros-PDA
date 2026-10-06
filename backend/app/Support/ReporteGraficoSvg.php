@@ -4,6 +4,19 @@ namespace App\Support;
 
 class ReporteGraficoSvg
 {
+    /** Misma paleta que Chart.js en reportes/resultado. */
+    private static function palette(): array
+    {
+        return ['#2563eb', '#059669', '#64748b', '#d97706', '#7c3aed', '#dc2626', '#0891b2'];
+    }
+
+    private static function colorForIndex(int $index): string
+    {
+        $palette = self::palette();
+
+        return $palette[$index % count($palette)];
+    }
+
     /** @param  array<int, string>  $labels
      * @param  array<int, int|float>  $values
      */
@@ -33,9 +46,10 @@ class ReporteGraficoSvg
         $encoded = base64_encode($svg);
 
         return sprintf(
-            '<img src="data:image/svg+xml;base64,%s" width="%d" alt="Gráfica del reporte" style="display:block;margin:0 auto;max-width:100%%;height:auto;" />',
+            '<img src="data:image/svg+xml;base64,%s" width="%d" height="%d" alt="Gráfica del reporte" style="display:block;margin:0 auto;max-width:100%%;" />',
             $encoded,
-            $width
+            $width,
+            $height
         );
     }
 
@@ -58,11 +72,12 @@ class ReporteGraficoSvg
             $y = $pad + ($chartH - $h);
             $label = self::truncate($labels[$i] ?? '', 12);
             $bars .= sprintf(
-                '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="#2563eb" rx="2"/>',
+                '<rect x="%.1f" y="%.1f" width="%.1f" height="%.1f" fill="%s" rx="2"/>',
                 $x,
                 $y,
                 $barW,
-                $h
+                $h,
+                self::colorForIndex($i)
             );
             $bars .= sprintf(
                 '<text x="%.1f" y="%d" font-size="8" fill="#475569" text-anchor="middle">%s</text>',
@@ -100,11 +115,12 @@ class ReporteGraficoSvg
                 htmlspecialchars(self::truncate($labels[$i] ?? '', 22), ENT_QUOTES, 'UTF-8')
             );
             $content .= sprintf(
-                '<rect x="%d" y="%.1f" width="%.1f" height="%.1f" fill="#059669" rx="2"/>',
+                '<rect x="%d" y="%.1f" width="%.1f" height="%.1f" fill="%s" rx="2"/>',
                 $labelW,
                 $y + 4,
                 $bw,
-                $rowH - 8
+                $rowH - 8,
+                self::colorForIndex($i)
             );
             $content .= sprintf(
                 '<text x="%.1f" y="%.1f" font-size="9" fill="#111827">%s</text>',
@@ -158,7 +174,7 @@ class ReporteGraficoSvg
         $cx = $width / 2;
         $cy = $height / 2 - 10;
         $r = min($width, $height) / 2 - 40;
-        $colors = ['#2563eb', '#059669', '#64748b', '#d97706', '#7c3aed', '#dc2626', '#0891b2'];
+        $colors = self::palette();
         $start = -90;
         $slices = '';
         $legendY = 12;

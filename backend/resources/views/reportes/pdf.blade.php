@@ -5,29 +5,29 @@
     <title>Reporte {{ $tipo }}</title>
     <style>
         @page { size: A4 portrait; margin: 0; }
-        * { box-sizing: border-box; }
         body {
             font-family: DejaVu Sans, sans-serif;
             font-size: 11px;
             color: #1f2937;
             margin: 0;
             padding: 0;
-            width: 595pt;
         }
-        .membrete-full {
+        .membrete-full, .pie-full {
             width: 595pt;
             margin: 0;
             padding: 0;
             line-height: 0;
             overflow: hidden;
         }
-        .membrete-full img {
+        .membrete-full img, .pie-full img {
             display: block;
             margin: 0;
             padding: 0;
+            width: 595pt;
         }
         .contenido {
-            padding: 12pt 32pt {{ ($membrete['footerHeight'] ?? 0) + ($membrete['notaHeight'] ?? 14) + 10 }}pt;
+            margin: 0 36pt;
+            padding: 10pt 0 {{ ($membrete['footerHeight'] ?? 0) + ($membrete['notaHeight'] ?? 14) + 10 }}pt;
         }
         .header {
             border-bottom: 2px solid #1f2937;
@@ -35,7 +35,7 @@
             margin-bottom: 14px;
         }
         h1 {
-            font-size: 16px;
+            font-size: 15px;
             margin: 0;
             color: #111827;
             text-align: center;
@@ -59,7 +59,13 @@
             border-left: 3px solid #2563eb;
             padding-left: 8px;
         }
-        table { width: 100%; border-collapse: collapse; margin-top: 4px; }
+        table {
+            width: 100%;
+            max-width: 100%;
+            border-collapse: collapse;
+            margin-top: 4px;
+            table-layout: fixed;
+        }
         th {
             background: #1f2937;
             color: #fff;
@@ -68,30 +74,33 @@
             padding: 8px;
             text-align: left;
         }
-        td { border: 1px solid #e5e7eb; padding: 7px 8px; }
-        td.num { text-align: right; font-weight: bold; width: 80px; }
+        td {
+            border: 1px solid #e5e7eb;
+            padding: 7px 8px;
+            word-wrap: break-word;
+            overflow: hidden;
+        }
+        td.num { text-align: right; font-weight: bold; width: 22%; }
         tr:nth-child(even) td { background: #f8fafc; }
         .chart-box {
             border: 1px solid #e5e7eb;
-            padding: 6px 8px 4px;
+            padding: 4px 4px 2px;
             background: #fafafa;
             text-align: center;
+            width: 100%;
+            max-width: 100%;
+            overflow: hidden;
         }
-        .chart-box img { max-width: 100%; height: auto; }
+        .chart-box img {
+            display: block;
+            margin: 0 auto;
+            max-width: 100%;
+            height: auto;
+        }
         .pie-full {
             position: fixed;
             left: 0;
             bottom: {{ $membrete['notaHeight'] ?? 14 }}pt;
-            width: 595pt;
-            margin: 0;
-            padding: 0;
-            line-height: 0;
-            overflow: hidden;
-        }
-        .pie-full img {
-            display: block;
-            margin: 0;
-            padding: 0;
         }
         .nota-sistema {
             position: fixed;
@@ -99,7 +108,7 @@
             bottom: 0;
             width: 595pt;
             margin: 0;
-            padding: 2pt 32pt 4pt;
+            padding: 2pt 36pt 4pt;
             font-size: 7px;
             color: #94a3b8;
             text-align: center;
