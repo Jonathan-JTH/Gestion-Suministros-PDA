@@ -48,10 +48,8 @@
             </form>
                 @if(!empty($recaptchaEnabled))
                 <p class="text-muted text-center mt-3 mb-0" style="font-size: 0.7rem;">Protegido por reCAPTCHA · Google</p>
-                <p class="text-muted text-center mt-2 mb-0" style="font-size: 0.65rem;">
-                    Si el widget falla, en
-                    <a href="https://www.google.com/recaptcha/admin" target="_blank" rel="noopener">reCAPTCHA Admin</a>
-                    → Configuración → dominios: <strong>localhost</strong> y <strong>127.0.0.1</strong>
+                
+                   
                 </p>
             @endif
         </div>
